@@ -1,5 +1,4 @@
 variables:
-  # Project
   - name: ProjectName
     description: "Project name (will be used in S3 bucket names and tags)"
     type: string
@@ -22,7 +21,6 @@ variables:
     type: string
     default: "eu-central-1"
 
-  # Development 
   - name: DevelopmentAccountId
     description: "Development AWS Account ID"
     type: string
@@ -36,7 +34,6 @@ variables:
     type: string
     default: "eu-west-1"
 
-  # Production 
   - name: ProductionAccountId
     description: "Production AWS Account ID"
     type: string
@@ -50,7 +47,6 @@ variables:
     type: string
     default: "us-east-1"
 
-  # Management 
   - name: ManagementAccountId
     description: "Management AWS Account ID"
     type: string
@@ -64,7 +60,6 @@ variables:
     type: string
     default: "us-east-1"
 
-  # Monitoring 
   - name: MonitoringAccountId
     description: "Monitoring AWS Account ID"
     type: string
@@ -77,7 +72,3 @@ variables:
     description: "Monitoring AWS Region"
     type: string
     default: "us-east-1"
-
-engine:
-  go_template:
-    missing_key_action: "error"
