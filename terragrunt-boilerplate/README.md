@@ -12,7 +12,11 @@ This project uses Terragrunt for Infrastructure as Code management across multip
 ## Project Structure
 
 - `infrastructure/`: Contains all Terragrunt configurations
-  - `live/`: Environment-specific configurations
-  - `project.hcl`: Project-wide variables
-  - `root.hcl`: Common Terragrunt configuration
+- `live/`: Environment-specific configurations
+- `project.hcl`: Project-wide variables
+- `root.hcl`: Common Terragrunt configuration
 - `units/`: Reusable Terragrunt modules
+
+## Install OpenTofu and Terragrunt
+
+use 'mise install' command to install tools
