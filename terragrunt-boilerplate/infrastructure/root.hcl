@@ -16,7 +16,7 @@ locals {
     project_version = local.project_version
   }
 
-  s3_state_region = "{{.StateRegion}}"
+  s3_state_region = "{{.S3StateRegion}}"
 }
 
 remote_state {
@@ -28,7 +28,7 @@ remote_state {
   config = {
     bucket         = "${local.default_tags.project}-${local.default_tags.env}-terraform-state"
     key            = "${path_relative_to_include()}/terraform.tfstate"
-    region         = "${local.s3_state_region}"
+    region         = local.s3_state_region
     encrypt        = true
     dynamodb_table = "${local.default_tags.project}-${local.default_tags.env}-terraform-state-lock"
   }
