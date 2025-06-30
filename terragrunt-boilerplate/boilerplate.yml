@@ -1,74 +1,91 @@
 variables:
   - name: ProjectName
     description: "Project name (will be used in S3 bucket names and tags)"
+    order: 0
     type: string
     
   - name: ProjectVersion
     description: "Project version"
+    order: 1
     type: string
     default: "v1.0.0"
     
   - name: OrganizationId
     description: "AWS Organization ID"
+    order: 2
     type: string
     
   - name: OrganizationRootId
     description: "AWS Organization Root ID"
+    order: 3
     type: string
     
   - name: S3StateRegion
     description: "AWS region for Terraform state storage"
+    order: 4
     type: string
     default: "eu-central-1"
 
   - name: DevelopmentAccountId
     description: "Development AWS Account ID"
+    order: 5
     type: string
     
   - name: DevelopmentAccountEmail
     description: "Development AWS Account Email"
+    order: 6
     type: string
     
   - name: DevelopmentRegion
     description: "Development AWS Region"
+    order: 7
     type: string
     default: "eu-west-1"
 
   - name: ProductionAccountId
     description: "Production AWS Account ID"
+    order: 8
     type: string
     
   - name: ProductionAccountEmail
     description: "Production AWS Account Email"
+    order: 9
     type: string
     
   - name: ProductionRegion
     description: "Production AWS Region"
+    order: 10
     type: string
     default: "us-east-1"
 
   - name: ManagementAccountId
     description: "Management AWS Account ID"
+    order: 11
     type: string
     
   - name: ManagementAccountEmail
     description: "Management AWS Account Email"
+    order: 12
     type: string
     
   - name: ManagementRegion
     description: "Management AWS Region"
+    order: 13
     type: string
     default: "us-east-1"
 
   - name: MonitoringAccountId
     description: "Monitoring AWS Account ID"
+    order: 14
     type: string
     
   - name: MonitoringAccountEmail
     description: "Monitoring AWS Account Email"
+    order: 15
     type: string
     
   - name: MonitoringRegion
     description: "Monitoring AWS Region"
+    order: 16
     type: string
     default: "us-east-1"
