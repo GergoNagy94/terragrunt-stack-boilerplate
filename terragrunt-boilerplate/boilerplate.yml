@@ -1,171 +1,79 @@
 variables:
+  # Project
   - name: ProjectName
-    description: "Name of the project (used for S3 bucket names and tagging)"
+    description: "Project name (will be used in S3 bucket names and tags)"
     type: string
-    required: true
-    validation:
-      pattern: "^[a-z0-9-]+$"
-      error: "ProjectName must contain only lowercase letters, numbers, and hyphens"
-
+    
   - name: ProjectVersion
-    description: "Version of the project"
+    description: "Project version"
     type: string
     default: "v1.0.0"
-    required: true
-
+    
   - name: OrganizationId
     description: "AWS Organization ID"
     type: string
-    required: true
-
+    
   - name: OrganizationRootId
     description: "AWS Organization Root ID"
     type: string
-    required: true
-
-  - name: StateRegion
+    
+  - name: S3StateRegion
     description: "AWS region for Terraform state storage"
     type: string
     default: "eu-central-1"
-    required: true
 
-  - name: CreateDevelopment
-    description: "Create development environment"
-    type: bool
-    default: true
-
-  - name: CreateProduction
-    description: "Create production environment"
-    type: bool
-    default: true
-
-  - name: CreateManagement
-    description: "Create management environment"
-    type: bool
-    default: true
-
-  - name: CreateMonitoring
-    description: "Create monitoring environment"
-    type: bool
-    default: true
-
-  - name: ManagementAccountId
-    description: "AWS Account ID for management account"
-    type: string
-    required: true
-
+  # Development
   - name: DevelopmentAccountId
-    description: "AWS Account ID for development account"
+    description: "Development AWS Account ID"
     type: string
-    required: true
-
-  - name: ProductionAccountId
-    description: "AWS Account ID for production account"
-    type: string
-    required: true
-
-  - name: MonitoringAccountId
-    description: "AWS Account ID for monitoring account"
-    type: string
-    required: true
-
-  - name: ManagementAccountEmail
-    description: "Email for management account"
-    type: string
-    required: true
-
+    
   - name: DevelopmentAccountEmail
-    description: "Email for development account"
+    description: "Development AWS Account Email"
     type: string
-    required: true
+    
+  - name: DevRegion
+    description: "Development AWS Region"
+    type: string
+    default: "eu-west-1"
 
+  # Production
+  - name: ProductionAccountId
+    description: "Production AWS Account ID"
+    type: string
+    
   - name: ProductionAccountEmail
-    description: "Email for production account"
+    description: "Production AWS Account Email"
     type: string
-    required: true
+    
+  - name: ProdRegion
+    description: "Production AWS Region"
+    type: string
+    default: "us-east-1"
 
+  # Management
+  - name: ManagementAccountId
+    description: "Management AWS Account ID"
+    type: string
+    
+  - name: ManagementAccountEmail
+    description: "Management AWS Account Email"
+    type: string
+    
+  - name: MgmtRegion
+    description: "Management AWS Region"
+    type: string
+    default: "us-east-1"
+
+  # Monitoring
+  - name: MonitoringAccountId
+    description: "Monitoring AWS Account ID"
+    type: string
+    
   - name: MonitoringAccountEmail
-    description: "Email for monitoring account"
+    description: "Monitoring AWS Account Email"
     type: string
-    required: true
-
-  - name: OpenTofuVersion
-    description: "OpenTofu version to use"
+    
+  - name: MonRegion
+    description: "Monitoring AWS Region"
     type: string
-    default: "1.9.0"
-
-  - name: TerragruntVersion
-    description: "Terragrunt version to use"
-    type: string
-    default: "0.78.0"
-
-  - name: VpcModuleVersion
-    description: "Version of the AWS VPC Terraform module"
-    type: string
-    default: "v5.2.0"
-
-  - name: SecurityGroupModuleVersion
-    description: "Version of the AWS Security Group Terraform module"
-    type: string
-    default: "v5.3.0"
-
-dependencies:
-  - name: development-env
-    template-url: "./environment-template"
-    output-folder: "infrastructure/live/development"
-    variables:
-      Environment: "development"
-      AccountId: "{{.DevelopmentAccountId}}"
-      AccountEmail: "{{.DevelopmentAccountEmail}}"
-      ProjectName: "{{.ProjectName}}"
-    skip: "{{not .CreateDevelopment}}"
-
-  - name: production-env
-    template-url: "./environment-template"
-    output-folder: "infrastructure/live/production"
-    variables:
-      Environment: "production"
-      AccountId: "{{.ProductionAccountId}}"
-      AccountEmail: "{{.ProductionAccountEmail}}"
-      ProjectName: "{{.ProjectName}}"
-    skip: "{{not .CreateProduction}}"
-
-  - name: management-env
-    template-url: "./environment-template"
-    output-folder: "infrastructure/live/management"
-    variables:
-      Environment: "management"
-      AccountId: "{{.ManagementAccountId}}"
-      AccountEmail: "{{.ManagementAccountEmail}}"
-      ProjectName: "{{.ProjectName}}"
-    skip: "{{not .CreateManagement}}"
-
-  - name: monitoring-env
-    template-url: "./environment-template"
-    output-folder: "infrastructure/live/monitoring"
-    variables:
-      Environment: "monitoring"
-      AccountId: "{{.MonitoringAccountId}}"
-      AccountEmail: "{{.MonitoringAccountEmail}}"
-      ProjectName: "{{.ProjectName}}"
-    skip: "{{not .CreateMonitoring}}"
-
-skip_files:
-  - path: "infrastructure/live/development"
-    condition: "{{not .CreateDevelopment}}"
-  - path: "infrastructure/live/production"
-    condition: "{{not .CreateProduction}}"
-  - path: "infrastructure/live/management"
-    condition: "{{not .CreateManagement}}"
-  - path: "infrastructure/live/monitoring"
-    condition: "{{not .CreateMonitoring}}"
-
-hooks:
-  before:
-    - command: ["echo", "Generating Terragrunt project structure for {{.ProjectName}}"]
-  after:
-    - command: ["echo", "Project {{.ProjectName}} generated successfully!"]
-    - command: ["echo", "Next steps:"]
-    - command: ["echo", "1. Review and update account IDs in infrastructure/project.hcl"]
-    - command: ["echo", "2. Configure AWS credentials for each account"]
-    - command: ["echo", "3. Run 'terragrunt run-all plan' to validate the configuration"]
+    default: "us-east-1"
