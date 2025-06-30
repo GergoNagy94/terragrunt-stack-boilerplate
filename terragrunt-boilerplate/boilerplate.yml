@@ -29,7 +29,7 @@ variables:
     description: "Development AWS Account Email"
     type: string
     
-  - name: DevRegion
+  - name: DevelopmentRegion
     description: "Development AWS Region"
     type: string
     default: "eu-west-1"
@@ -42,7 +42,7 @@ variables:
     description: "Production AWS Account Email"
     type: string
     
-  - name: ProdRegion
+  - name: ProductionRegion
     description: "Production AWS Region"
     type: string
     default: "us-east-1"
@@ -55,7 +55,7 @@ variables:
     description: "Management AWS Account Email"
     type: string
     
-  - name: MgmtRegion
+  - name: ManagementRegion
     description: "Management AWS Region"
     type: string
     default: "us-east-1"
@@ -68,7 +68,7 @@ variables:
     description: "Monitoring AWS Account Email"
     type: string
     
-  - name: MonRegion
+  - name: MonitoringRegion
     description: "Monitoring AWS Region"
     type: string
     default: "us-east-1"
