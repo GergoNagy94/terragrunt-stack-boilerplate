@@ -4,10 +4,10 @@ This project uses Terragrunt for Infrastructure as Code management across multip
 
 ## Environments
 
-- **Development**: Account {{.DevelopmentAccountId}} in {{.DevRegion}}
-- **Production**: Account {{.ProductionAccountId}} in {{.ProdRegion}}
-- **Management**: Account {{.ManagementAccountId}} in {{.MgmtRegion}}
-- **Monitoring**: Account {{.MonitoringAccountId}} in {{.MonRegion}}
+- **Development**: Account {{.DevelopmentAccountId}} in {{.DevelopmentRegion}}
+- **Production**: Account {{.ProductionAccountId}} in {{.ProductionRegion}}
+- **Management**: Account {{.ManagementAccountId}} in {{.ManagementRegion}}
+- **Monitoring**: Account {{.MonitoringAccountId}} in {{.MonitoringRegion}}
 
 ## Project Structure
 
