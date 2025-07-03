@@ -12,8 +12,8 @@ unit "vpc" {
     create_egress_only_igw = true
     enable_dns_hostnames   = true
     enable_dns_support     = true
-    region                 = "{{.DevelompentRegion}}"
-    azs                    = ["{{.DevelompentRegion}}a", "{{.DevelompentRegion}}b", "{{.DevelompentRegion}}c"]
+    region                 = "{{.DevelopmentRegion}}"
+    azs                    = ["{{.DevelopmentRegion}}a", "{{.DevelopmentRegion}}b", "{{.DevelopmentRegion}}c"]
   }
 }
 
