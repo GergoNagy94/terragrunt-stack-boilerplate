@@ -1,5 +1,5 @@
 ProjectName: "example-app"
-ProjectVersion: "v1.1.0"
+ProjectVersion: "v1.0.0"
 
 ManagementAccountId: "111111111111"
 MonitoringAccountId: "222222222222"
@@ -16,5 +16,5 @@ ProductionRegion: "eu-central-1"
 StateRegion: "eu-central-1"
 EnabledUnits: "vpc,sg"
 
-OpentofuVersion: "1.9.0"
-TerragruntVersion: "0.78.0"
+OpentofuVersion: "1.10.2"
+TerragruntVersion: "0.82.3"

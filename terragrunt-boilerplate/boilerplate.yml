@@ -105,7 +105,7 @@ variables:
     description: "OpenTofu version"
     order: 16
     type: string
-    default: "1.9.0"
+    default: "1.10.2"
 
   - name: TerragruntVersion
     description: "Terragrunt version"
