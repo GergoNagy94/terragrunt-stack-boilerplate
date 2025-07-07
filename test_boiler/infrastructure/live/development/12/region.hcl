@@ -1,3 +1,0 @@
-locals {
-  region = "12"
-}

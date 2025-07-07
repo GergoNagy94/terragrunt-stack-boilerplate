@@ -1,12 +1,4 @@
-# =============================================================================
-# TERRAGRUNT STACK - AWS INFRASTRUCTURE PRESETS
-# =============================================================================
-# Preset: {{.InfrastructurePreset}}
-# =============================================================================
-
-# -----------------------------------------------------------------------------
 # FUNDAMENTAL COMPONENTS (all presets)
-# -----------------------------------------------------------------------------
 
 unit "vpc" {
   # #fundamental
@@ -30,9 +22,7 @@ unit "core_sg" {
   }
 }
 
-# -----------------------------------------------------------------------------
 # WEB COMPONENTS (webapp + eks presets)
-# -----------------------------------------------------------------------------
 
 {{ if or (eq .InfrastructurePreset "webapp") (eq .InfrastructurePreset "eks") }}
 unit "web_sg" {
@@ -58,9 +48,7 @@ unit "alb" {
 }
 {{ end }}
 
-# -----------------------------------------------------------------------------
 # WEBAPP-SPECIFIC COMPONENTS
-# -----------------------------------------------------------------------------
 
 {{ if eq .InfrastructurePreset "webapp" }}
 unit "app_sg" {
@@ -130,9 +118,7 @@ unit "waf" {
 }
 {{ end }}
 
-# -----------------------------------------------------------------------------
 # EKS-SPECIFIC COMPONENTS
-# -----------------------------------------------------------------------------
 
 {{ if eq .InfrastructurePreset "eks" }}
 unit "eks_cluster_sg" {
@@ -192,10 +178,3 @@ unit "cluster_autoscaler" {
   }
 }
 {{ end }}
-
-# =============================================================================
-# PRESET SUMMARY
-# foundation:  vpc, core_sg (2 units)
-# webapp:      + web_sg, alb, app_sg, db_sg, rds, s3, cloudfront, waf (10 units)
-# eks:         + web_sg, alb, eks_cluster_sg, eks_node_sg, eks, aws_load_balancer_controller, cluster_autoscaler (9 units)
-# =============================================================================
