@@ -1,0 +1,21 @@
+# vars.yml
+ProjectName: "example-app"
+ProjectVersion: "v1.1.0"
+
+ManagementAccountId: "111111111111"
+MonitoringAccountId: "222222222222"
+ProductionAccountId: "333333333333"
+DevelopmentAccountId: "444444444444"
+
+EmailDomain: "mycompany.com"
+
+DevelopmentRegion: "eu-west-1"
+ManagementRegion: "us-east-1"
+MonitoringRegion: "us-east-1"
+ProductionRegion: "eu-central-1"
+
+StateRegion: "eu-central-1"
+EnabledUnits: "vpc,sg"
+
+OpentofuVersion: "1.9.0"
+TerragruntVersion: "0.78.0"
