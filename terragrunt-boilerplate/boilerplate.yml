@@ -95,15 +95,18 @@ variables:
     type: string
     default: "eu-central-1"
 
-  - name: EnabledUnits
-    description: "Units to enable in the stacks"
+  - name: InfrastructurePreset
+    description: |
+      Choose your AWS infrastructure setup:
+      
+      • foundation  - Basic AWS foundation (VPC, Security Groups, NAT Gateway)
+      • webapp      - Production web application (ALB, ASG, RDS, CloudFront, WAF)
+      • eks         - Production Kubernetes cluster (EKS, managed nodes, essential add-ons)
     order: 15
-    type: map
-    default:
-      vpc: true
-      sg: true
-      rds: false
-      eks: false
+    type: string
+    default: "foundation"
+    validate:
+      - required
 
   - name: OpentofuVersion
     description: "OpenTofu version"
