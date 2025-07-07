@@ -1,33 +1,54 @@
+# FUNDAMENTAL COMPONENTS (all presets)
+
 unit "vpc" {
-  #vpc placeholder
+  # #fundamental
+  source = "../../../../units/vpc"
+  path = "vpc"
+
+  values = {
+    preset = "{{.InfrastructurePreset}}"
+  }
 }
 
-unit "core_sg" {
-  #core sg placeholder
-}
+# WEB COMPONENTS (webapp + eks presets)
 
 {{ if or (eq .InfrastructurePreset "webapp") (eq .InfrastructurePreset "eks") }}
 unit "web_sg" {
-  #web sg placeholder
+  # #web
+  source = "../../../../units/sg"
+  path = "web-sg"
+
+  values = {
+    preset = "{{.InfrastructurePreset}}"
+  }
 }
-{{ end }}
+
+# WEBAPP-SPECIFIC COMPONENTS
 
 {{ if eq .InfrastructurePreset "webapp" }}
-unit "app_sg" {
-  #app sg placeholder
-}
+unit "cloudfront" {
+  # #webapp
+  source = "../../../../units/cloudfront"
+  path = "cloudfront"
 
-unit "db_sg" {
-#db sg placeholder
+  values = {
+    preset = "{{.InfrastructurePreset}}"
+  }
 }
 {{ end }}
 
-{{ if eq .InfrastructurePreset "eks" }}
-unit "eks_cluster_sg" {
-  #eks sg placeholder
-}
+# EKS-SPECIFIC COMPONENTS
 
-unit "eks_node_sg" {
-  #eks node sg placeholder
+{{ if eq .InfrastructurePreset "eks" }}
+
+unit "aws_load_balancer_controller" {
+  # #eks
+  source = "../../../../units/k8s-addon"
+  path = "aws-load-balancer-controller"
+
+  values = {
+    preset = "{{.InfrastructurePreset}}"
+    addon_type = "aws-load-balancer-controller"
+  }
 }
 {{ end }}
