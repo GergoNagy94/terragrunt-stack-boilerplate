@@ -1,4 +1,4 @@
-{{ if contains .EnabledUnits "vpc" }}
+{{ if .EnabledUnits.vpc }}
 unit "vpc" {
   source = "../../../../units/vpc"
   path = "vpc"
@@ -17,8 +17,7 @@ unit "vpc" {
   }
 }
 {{ end }}
-
-{{ if and (contains .EnabledUnits "sg") (contains .EnabledUnits "vpc") }}
+{{ if and .EnabledUnits.sg .EnabledUnits.vpc }}
 unit "web_sg" {
   source = "../../../../units/sg"
   path = "web-sg"

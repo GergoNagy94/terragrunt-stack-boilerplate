@@ -96,10 +96,14 @@ variables:
     default: "eu-central-1"
 
   - name: EnabledUnits
-    description: "Units to enable in the stacks (comma-separated: vpc,sg,rds,eks)"
+    description: "Units to enable in the stacks"
     order: 15
-    type: string
-    default: "vpc,sg"
+    type: map
+    default:
+      vpc: true
+      sg: true
+      rds: false
+      eks: false
 
   - name: OpentofuVersion
     description: "OpenTofu version"
@@ -112,11 +116,10 @@ variables:
     order: 17
     type: string
     default: "0.82.3"
-
 #hooks:
 #  before:
 #    - command: ["echo", "Starting Terragrunt Stack generation for {{.ProjectName}}..."]
-#  
+#
 #  after:
 #    - command: ["echo", "Terragrunt Stack generated successfully!"]
 #    - command: ["echo", "Project created at: {{.OutputDir}}"]
