@@ -98,7 +98,7 @@ variables:
   - name: InfrastructurePreset
     description: |
       Choose your AWS infrastructure setup:
-      
+
       • foundation  - Basic AWS foundation (VPC, Security Groups, NAT Gateway)
       • webapp      - Production web application (ALB, ASG, RDS, CloudFront, WAF)
       • eks         - Production Kubernetes cluster (EKS, managed nodes, essential add-ons)
@@ -119,17 +119,20 @@ variables:
     order: 17
     type: string
     default: "0.82.3"
+
 hooks:
   before:
-    - command: ["echo", "Welcome to Code Factory Terragrunt Stack Boilerplate!"]
-    - command: ["echo", "Starting Terragrunt Stack generation for {{.ProjectName}}..."]
+    - command: "echo"
+      args:
+        - "Welcome to Code Factory Terragrunt Stack Boilerplate!"
+        - "Starting Terragrunt Stack generation for {{.ProjectName}}..."
 
   after:
-    - command: ["echo", "Terragrunt Stack generated successfully!"]
-    - command: ["echo", "Project created at: {{.OutputDir}}"]
-    - command: ["echo", ""]
-    - command: ["echo", "Next steps:"]
-    - command: ["echo", "1. cd {{.OutputDir}}"]
-    - command: ["echo", "2. mise trust && mise install"]
-    - command: ["echo", "3. Configure AWS credentials"]
-    - command: ["echo", "4. Review and customize the configuration"]
+    - command: "echo"
+      args:
+        - "Terragrunt Stack generated successfully!"
+        - ""
+        - "Next steps:"
+        - "1. mise trust && mise install"
+        - "2. Configure AWS credentials"
+        - "3. Review and customize the configuration"
