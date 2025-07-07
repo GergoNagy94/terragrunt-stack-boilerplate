@@ -1,91 +1,131 @@
 variables:
   - name: ProjectName
-    description: "Project name (will be used in S3 bucket names and tags)"
-    order: 0
-    type: string
-    
-  - name: ProjectVersion
-    description: "Project version"
+    description: "Name of your project (used in resource naming)"
     order: 1
     type: string
-    default: "v1.0.0"
-    
-  - name: OrganizationId
-    description: "AWS Organization ID"
+    default: "my-project"
+    validate:
+      - required
+      - min-length-3
+      - max-length-20
+
+  - name: ProjectVersion
+    description: "Project version"
     order: 2
     type: string
-    
-  - name: OrganizationRootId
-    description: "AWS Organization Root ID"
+    default: "v1.0.0"
+
+  - name: OrganizationId
+    description: "AWS Organization ID"
     order: 3
     type: string
-    
-  - name: S3StateRegion
-    description: "AWS region for Terraform state storage"
+    default: "o-00000000000"
+
+  - name: OrganizationRootId
+    description: "AWS Organization Root ID"
     order: 4
     type: string
-    default: "eu-central-1"
+    default: "r-0000"
 
-  - name: DevelopmentAccountId
-    description: "Development AWS Account ID"
+  - name: ManagementAccountId
+    description: "Management Account ID"
     order: 5
     type: string
-    
-  - name: DevelopmentAccountEmail
-    description: "Development AWS Account Email"
+    validate:
+      - required
+      - length-12
+
+  - name: MonitoringAccountId
+    description: "Monitoring Account ID"
     order: 6
     type: string
-    
+    validate:
+      - required
+      - length-12
+
+  - name: ProductionAccountId
+    description: "Production Account ID"
+    order: 7
+    type: string
+    validate:
+      - required
+      - length-12
+
+  - name: DevelopmentAccountId
+    description: "Development Account ID"
+    order: 8
+    type: string
+    validate:
+      - required
+      - length-12
+
+  - name: EmailDomain
+    description: "Domain for AWS account emails (e.g., example.com)"
+    order: 9
+    type: string
+    default: "example.com"
+
   - name: DevelopmentRegion
     description: "Development AWS Region"
-    order: 7
+    order: 10
     type: string
     default: "eu-west-1"
 
-  - name: ProductionAccountId
-    description: "Production AWS Account ID"
-    order: 8
-    type: string
-    
-  - name: ProductionAccountEmail
-    description: "Production AWS Account Email"
-    order: 9
-    type: string
-    
-  - name: ProductionRegion
-    description: "Production AWS Region"
-    order: 10
-    type: string
-    default: "us-east-1"
-
-  - name: ManagementAccountId
-    description: "Management AWS Account ID"
-    order: 11
-    type: string
-    
-  - name: ManagementAccountEmail
-    description: "Management AWS Account Email"
-    order: 12
-    type: string
-    
   - name: ManagementRegion
     description: "Management AWS Region"
-    order: 13
+    order: 11
     type: string
     default: "us-east-1"
 
-  - name: MonitoringAccountId
-    description: "Monitoring AWS Account ID"
-    order: 14
-    type: string
-    
-  - name: MonitoringAccountEmail
-    description: "Monitoring AWS Account Email"
-    order: 15
-    type: string
-    
   - name: MonitoringRegion
     description: "Monitoring AWS Region"
-    order: 16
+    order: 12
     type: string
     default: "us-east-1"
+
+  - name: ProductionRegion
+    description: "Production AWS Region"
+    order: 13
+    type: string
+    default: "eu-central-1"
+
+  - name: StateRegion
+    description: "Region for Terraform state bucket"
+    order: 14
+    type: string
+    default: "eu-central-1"
+
+  - name: EnabledUnits
+    description: "Units to enable in the stacks"
+    order: 15
+    type: map
+    default:
+      vpc: true
+      sg: true
+      rds: false
+      eks: false
+
+  - name: OpentofuVersion
+    description: "OpenTofu version"
+    order: 16
+    type: string
+    default: "1.10.2"
+
+  - name: TerragruntVersion
+    description: "Terragrunt version"
+    order: 17
+    type: string
+    default: "0.82.3"
+#hooks:
+#  before:
+#    - command: ["echo", "Starting Terragrunt Stack generation for {{.ProjectName}}..."]
+#
+#  after:
+#    - command: ["echo", "Terragrunt Stack generated successfully!"]
+#    - command: ["echo", "Project created at: {{.OutputDir}}"]
+#    - command: ["echo", ""]
+#    - command: ["echo", "Next steps:"]
+#    - command: ["echo", "1. cd {{.OutputDir}}"]
+#    - command: ["echo", "2. mise trust && mise install"]
+#    - command: ["echo", "3. Configure AWS credentials"]
+#    - command: ["echo", "4. Review and customize the configuration"]

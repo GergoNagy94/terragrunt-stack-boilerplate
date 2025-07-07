@@ -16,7 +16,7 @@ locals {
     project_version = local.project_version
   }
 
-  s3_state_region = "{{.S3StateRegion}}"
+  s3_state_region = "{{.StateRegion}}"
 }
 
 remote_state {
@@ -26,11 +26,11 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket         = "${local.default_tags.project}-${local.default_tags.env}-terraform-state"
+    bucket         = "${local.project}-${local.env}-terraform-state"
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = local.s3_state_region
     encrypt        = true
-    dynamodb_table = "${local.default_tags.project}-${local.default_tags.env}-terraform-state-lock"
+    dynamodb_table = "${local.project}-${local.env}-terraform-state-lock"
   }
 }
 
