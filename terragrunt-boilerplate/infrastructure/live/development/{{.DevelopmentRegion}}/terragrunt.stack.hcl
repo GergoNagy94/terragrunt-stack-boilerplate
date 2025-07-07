@@ -1,7 +1,7 @@
-{ { if contains.EnabledUnits "vpc" } }
+{{ if contains .EnabledUnits "vpc" }}
 unit "vpc" {
   source = "../../../../units/vpc"
-  path   = "vpc"
+  path = "vpc"
 
   values = {
     cidr                   = "10.0.0.0/16"
@@ -16,12 +16,12 @@ unit "vpc" {
     azs                    = ["{{.DevelopmentRegion}}a", "{{.DevelopmentRegion}}b", "{{.DevelopmentRegion}}c"]
   }
 }
-{ { end } }
+{{ end }}
 
-{ { if and(contains.EnabledUnits "sg") (contains.EnabledUnits "vpc") } }
+{{ if and (contains .EnabledUnits "sg") (contains .EnabledUnits "vpc") }}
 unit "web_sg" {
   source = "../../../../units/sg"
-  path   = "web-sg"
+  path = "web-sg"
 
   values = {
     name        = "development-web-security-group"
@@ -69,4 +69,4 @@ unit "web_sg" {
     }
   }
 }
-{ { end } }
+{{ end }}

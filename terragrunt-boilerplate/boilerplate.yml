@@ -4,7 +4,7 @@ variables:
     order: 1
     type: string
     default: "my-project"
-    validations:
+    validate:
       - required
       - min-length-3
       - max-length-20
@@ -31,7 +31,7 @@ variables:
     description: "Management Account ID"
     order: 5
     type: string
-    validations:
+    validate:
       - required
       - length-12
 
@@ -39,7 +39,7 @@ variables:
     description: "Monitoring Account ID"
     order: 6
     type: string
-    validations:
+    validate:
       - required
       - length-12
 
@@ -47,7 +47,7 @@ variables:
     description: "Production Account ID"
     order: 7
     type: string
-    validations:
+    validate:
       - required
       - length-12
 
@@ -55,7 +55,7 @@ variables:
     description: "Development Account ID"
     order: 8
     type: string
-    validations:
+    validate:
       - required
       - length-12
 
@@ -113,16 +113,16 @@ variables:
     type: string
     default: "0.82.3"
 
-hooks:
-  before:
-    - command: ["echo", "Starting Terragrunt Stack generation for {{.ProjectName}}..."]
-  
-  after:
-    - command: ["echo", "Terragrunt Stack generated successfully!"]
-    - command: ["echo", "Project created at: {{.OutputDir}}"]
-    - command: ["echo", ""]
-    - command: ["echo", "Next steps:"]
-    - command: ["echo", "1. cd {{.OutputDir}}"]
-    - command: ["echo", "2. mise trust && mise install"]
-    - command: ["echo", "3. Configure AWS credentials"]
-    - command: ["echo", "4. Review and customize the configuration"]
+#hooks:
+#  before:
+#    - command: ["echo", "Starting Terragrunt Stack generation for {{.ProjectName}}..."]
+#  
+#  after:
+#    - command: ["echo", "Terragrunt Stack generated successfully!"]
+#    - command: ["echo", "Project created at: {{.OutputDir}}"]
+#    - command: ["echo", ""]
+#    - command: ["echo", "Next steps:"]
+#    - command: ["echo", "1. cd {{.OutputDir}}"]
+#    - command: ["echo", "2. mise trust && mise install"]
+#    - command: ["echo", "3. Configure AWS credentials"]
+#    - command: ["echo", "4. Review and customize the configuration"]

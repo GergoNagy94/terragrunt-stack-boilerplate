@@ -7,7 +7,7 @@ This is a Terragrunt stack monorepo for {{.ProjectName}} infrastructure.
 - **Project**: {{.ProjectName}}
 - **Version**: {{.ProjectVersion}}
 - **Created**: {{now | date "2006-01-02"}}
-- **Created By**: {{env "USER"}}
+- **Created By**: {{env "USER" "Boilerplate User"}}
 
 ## Environment Configuration
 
