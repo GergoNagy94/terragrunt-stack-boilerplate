@@ -1,7 +1,7 @@
+{ { if contains.EnabledUnits "vpc" } }
 unit "vpc" {
   source = "../../../../units/vpc"
-
-  path = "vpc"
+  path   = "vpc"
 
   values = {
     cidr                   = "10.0.0.0/16"
@@ -16,15 +16,16 @@ unit "vpc" {
     azs                    = ["{{.DevelopmentRegion}}a", "{{.DevelopmentRegion}}b", "{{.DevelopmentRegion}}c"]
   }
 }
+{ { end } }
 
+{ { if and(contains.EnabledUnits "sg") (contains.EnabledUnits "vpc") } }
 unit "web_sg" {
   source = "../../../../units/sg"
-
-  path = "web-sg"
+  path   = "web-sg"
 
   values = {
-    name        = "web-security-group"
-    description = "Security group for web servers"
+    name        = "development-web-security-group"
+    description = "Security group for web servers in development"
     vpc_path    = "../vpc"
 
     ingress_with_cidr_blocks = [
@@ -62,8 +63,10 @@ unit "web_sg" {
     ]
 
     tags = {
-      Name    = "web-security-group"
-      Purpose = "web-servers"
+      Name        = "development-web-security-group"
+      Purpose     = "web-servers"
+      Environment = "development"
     }
   }
 }
+{ { end } }
