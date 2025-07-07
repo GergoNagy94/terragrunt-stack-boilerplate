@@ -16,11 +16,6 @@ Environment: Management     Region: {{.ManagementRegion}}       Account ID: {{.M
 Environment: Monitoring     Region: {{.MonitoringRegion}}       Account ID: {{.MonitoringAccountId}}  
 Environment: Production     Region: {{.ProductionRegion}}       Account ID: {{.ProductionAccountId}}  
 
-## Enabled Units
-
-The following infrastructure units are configured in this stack:
-- {{.EnabledUnits}}
-
 ## Project Structure
 
 ```
@@ -74,7 +69,6 @@ AWS_PROFILE={{.ProjectName}}-development terragrunt apply --terragrunt-working-d
 To add a new unit to the stack:
 
 1. Add the unit configuration to `units/` directory
-2. Update the `EnabledUnits` variable in your boilerplate configuration
 3. Regenerate the stack files or manually add the unit to `terragrunt.stack.hcl`
 
 ## Security Considerations

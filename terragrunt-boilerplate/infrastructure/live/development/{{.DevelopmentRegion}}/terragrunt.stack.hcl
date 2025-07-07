@@ -1,71 +1,33 @@
-{{ if .EnabledUnits.vpc }}
 unit "vpc" {
-  source = "../../../../units/vpc"
-  path = "vpc"
+  #vpc placeholder
+}
 
-  values = {
-    cidr                   = "10.0.0.0/16"
-    private_subnets        = ["10.0.0.0/20", "10.0.16.0/20", "10.0.32.0/20"]
-    public_subnets         = ["10.0.48.0/24", "10.0.49.0/24", "10.0.50.0/24"]
-    enable_nat_gateway     = true
-    single_nat_gateway     = true
-    create_egress_only_igw = true
-    enable_dns_hostnames   = true
-    enable_dns_support     = true
-    region                 = "{{.DevelopmentRegion}}"
-    azs                    = ["{{.DevelopmentRegion}}a", "{{.DevelopmentRegion}}b", "{{.DevelopmentRegion}}c"]
-  }
+unit "core_sg" {
+  #core sg placeholder
+}
+
+{{ if or (eq .InfrastructurePreset "webapp") (eq .InfrastructurePreset "eks") }}
+unit "web_sg" {
+  #web sg placeholder
 }
 {{ end }}
-{{ if and .EnabledUnits.sg .EnabledUnits.vpc }}
-unit "web_sg" {
-  source = "../../../../units/sg"
-  path = "web-sg"
 
-  values = {
-    name        = "development-web-security-group"
-    description = "Security group for web servers in development"
-    vpc_path    = "../vpc"
+{{ if eq .InfrastructurePreset "webapp" }}
+unit "app_sg" {
+  #app sg placeholder
+}
 
-    ingress_with_cidr_blocks = [
-      {
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        description = "HTTP"
-        cidr_blocks = "0.0.0.0/0"
-      },
-      {
-        from_port   = 443
-        to_port     = 443
-        protocol    = "tcp"
-        description = "HTTPS"
-        cidr_blocks = "0.0.0.0/0"
-      },
-      {
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        description = "SSH"
-        cidr_blocks = "10.0.0.0/16"
-      }
-    ]
+unit "db_sg" {
+#db sg placeholder
+}
+{{ end }}
 
-    egress_with_cidr_blocks = [
-      {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        description = "All outbound traffic"
-        cidr_blocks = "0.0.0.0/0"
-      }
-    ]
+{{ if eq .InfrastructurePreset "eks" }}
+unit "eks_cluster_sg" {
+  #eks sg placeholder
+}
 
-    tags = {
-      Name        = "development-web-security-group"
-      Purpose     = "web-servers"
-      Environment = "development"
-    }
-  }
+unit "eks_node_sg" {
+  #eks node sg placeholder
 }
 {{ end }}
