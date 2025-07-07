@@ -1,4 +1,4 @@
 locals {
-   account      = "development"
+   account      = "production"
    account_id   = "1"
 }

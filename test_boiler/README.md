@@ -11,10 +11,10 @@ This is a Terragrunt stack monorepo for my-project infrastructure.
 
 ## Environment Configuration
 
-Environment: Development    Region: 12      Account ID: 12 
-Environment: Management     Region: 12       Account ID: 12  
-Environment: Monitoring     Region: 12       Account ID: 12  
-Environment: Production     Region: 12       Account ID: 12  
+Environment: Development    Region: eu-west-1      Account ID: 1 
+Environment: Management     Region: us-east-1       Account ID: 1  
+Environment: Monitoring     Region: us-east-1       Account ID: 1  
+Environment: Production     Region: eu-central-1       Account ID: 1  
 
 ## Project Structure
 
@@ -58,7 +58,7 @@ aws configure --profile my-project-production
 
 3. Deploy infrastructure:
 ```bash
-cd infrastructure/live/development/12
+cd infrastructure/live/development/eu-west-1
 AWS_PROFILE=my-project-development terragrunt run-all apply
 
 AWS_PROFILE=my-project-development terragrunt apply --terragrunt-working-dir vpc
