@@ -124,17 +124,17 @@ hooks:
   before:
     - command: "echo"
       args:
-        - |
-          Welcome to Code Factory Terragrunt Stack Boilerplate!
-          
-          Starting Terragrunt Stack generation for {{.ProjectName}}..
+        - "\n"
+        - "Welcome to Code Factory Terragrunt Stack Boilerplate! \n"
+        - "\n"
+        - "Starting Terragrunt Stack generation for {{.ProjectName}}... \n"
 
   after:
     - command: "echo"
       args:
-        - | 
-          "Terragrunt Stack generated successfully!"
-          "Next steps:"
-          "1. mise trust && mise install"
-          "2. Configure AWS credentials"
-          "3. Review and customize the configuration"
+        - "Terragrunt Stack generated successfully!"
+        - ""
+        - "Next steps:"
+        - "1. mise trust && mise install"
+        - "2. Configure AWS credentials"
+        - "3. Review and customize the configuration"
