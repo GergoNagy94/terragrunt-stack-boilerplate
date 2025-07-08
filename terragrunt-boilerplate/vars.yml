@@ -15,11 +15,5 @@ ProductionRegion: "eu-central-1"
 
 StateRegion: "eu-central-1"
 
-EnabledUnits:
-  vpc: true
-  sg: true
-  rds: false
-  eks: false
-
 OpentofuVersion: "1.10.2"
 TerragruntVersion: "0.82.3"
