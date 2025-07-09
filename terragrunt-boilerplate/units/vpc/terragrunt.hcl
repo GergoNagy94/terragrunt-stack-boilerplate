@@ -10,9 +10,13 @@ inputs = {
   name = values.name
   cidr = values.cidr
 
-  azs             = values.azs
-  private_subnets = values.private_subnets
-  public_subnets  = values.public_subnets
+  azs                                = values.azs
+  private_subnets                    = values.private_subnets
+  public_subnets                     = values.public_subnets
+
+  database_subnets                   = try(values.database_subnets, [])
+  create_database_subnet_group       = try(values.create_database_subnet_group, true)
+  create_database_subnet_route_table = try(values.create_database_subnet_route_table, true)
 
   enable_nat_gateway     = try(values.enable_nat_gateway, true)
   single_nat_gateway     = try(values.single_nat_gateway, true)
@@ -20,6 +24,9 @@ inputs = {
 
   enable_dns_hostnames = try(values.enable_dns_hostnames, true)
   enable_dns_support   = try(values.enable_dns_support, true)
+
+  enable_s3_endpoint       = try(values.enable_s3_endpoint, true)
+  enable_dynamodb_endpoint = try(values.enable_dynamodb_endpoint, true)
 
   enable_flow_log                      = try(values.enable_flow_log, false)
   create_flow_log_cloudwatch_iam_role  = try(values.create_flow_log_cloudwatch_iam_role, false)
@@ -40,6 +47,10 @@ inputs = {
       "kubernetes.io/cluster/${values.cluster_name}" = "owned"
     }
   )
+
+  database_subnet_tags = try(values.database_subnet_tags, {
+    Type = "Database"
+  })
 
   tags = try(values.tags, {})
 }
