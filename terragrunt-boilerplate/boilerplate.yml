@@ -101,6 +101,7 @@ variables:
 
       • foundation          - vpc
       • web                 - s3, cloudfront, route53, webacl
+      • serverless          - vpc, rds, lambda, secrets manager
       • eks-auto            - vpc, eks-automod
       • eks-managed         - vpc, eks-managed-nodegroup
     order: 15
