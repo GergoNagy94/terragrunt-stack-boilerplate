@@ -50,8 +50,7 @@ provider "aws" {
       role_arn     = "arn:aws:iam::${local.account_id}:role/terragrunt-execution-role"
     }
 }
-
-{{ if or(eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
+{{ if or (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
@@ -62,7 +61,6 @@ provider "kubernetes" {
     args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
   }
 }
-
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
