@@ -43,9 +43,9 @@ unit "vpc" {
     create_flow_log_cloudwatch_log_group = false
 
     tags = {
-      Name                                        = "eks-vpc"
+      Name                                        = "{local.project}-{local.env}-vpc"
       Environment                                 = "development"
-      "kubernetes.io/cluster/my-eks-auto-cluster" = "owned"
+      "kubernetes.io/cluster/{local.project}-auto-cluster" = "owned"
     }
   }
 }
@@ -68,7 +68,7 @@ unit "route53_zones" {
     }
 
     tags = {
-      Name = "my-web-project-dns-zones"
+      Name = "{local.project}-dns-zones"
     }
   }
 }
@@ -84,7 +84,7 @@ unit "acm" {
     wait_for_validation       = true
 
     tags = {
-      Name = "my-web-project-ssl"
+      Name = "{local.project}-ssl"
     }
   }
 }
@@ -94,7 +94,7 @@ unit "webacl" {
   path   = "webacl"
 
   values = {
-    name  = "my-web-project-waf"
+    name  = "{local.project}-waf"
     scope = "CLOUDFRONT"
 
     rules = [
@@ -129,7 +129,7 @@ unit "webacl" {
     ]
 
     tags = {
-      Name = "my-web-project-waf"
+      Name = "{local.project}-waf"
     }
   }
 }
@@ -139,7 +139,7 @@ unit "s3" {
   path   = "s3"
 
   values = {
-    bucket_name = "my-web-project-static-site-12345"
+    bucket_name = "{local.project}-static-site-12345"
 
     website = {
       index_document = "index.html"
@@ -160,7 +160,7 @@ unit "s3" {
           Effect    = "Allow"
           Principal = "*"
           Action    = "s3:GetObject"
-          Resource  = "arn:aws:s3:::my-web-project-static-site-12345/*"
+          Resource  = "arn:aws:s3:::{local.project}-static-site-12345/*"
         }
       ]
     })
@@ -186,7 +186,7 @@ unit "s3" {
     ]
 
     tags = {
-      Name = "my-web-project-static-site"
+      Name = "{local.project}-static-site"
     }
   }
 }
@@ -228,7 +228,7 @@ unit "cloudfront" {
     ]
 
     tags = {
-      Name = "my-web-project-cloudfront"
+      Name = "{local.project}-cloudfront"
     }
   }
 }
@@ -256,7 +256,7 @@ unit "route53_records" {
     ]
 
     tags = {
-      Name = "my-web-project-dns-records"
+      Name = "{local.project}-dns-records"
     }
   }
 }
@@ -295,7 +295,7 @@ unit "eks" {
     vpc_path = "../vpc"
     kms_path = "../kms"
 
-    cluster_name    = "my-eks-auto-cluster"
+    cluster_name    = "{local.project}-auto-cluster"
     cluster_version = "1.31"
 
     enable_auto_mode              = true
@@ -336,7 +336,7 @@ unit "eks" {
     node_security_group_additional_rules    = {}
 
     tags = {
-      Name        = "my-eks-auto-cluster"
+      Name        = "{local.project}-auto-cluster"
       Environment = "development"
       ManagedBy   = "Terragrunt"
       EKSMode     = "Auto"
@@ -384,7 +384,7 @@ unit "aws_load_balancer_controller" {
 
     helm_chart_values = [
       <<-EOT
-      clusterName: my-eks-auto-cluster
+      clusterName: {local.project}-auto-cluster
       serviceAccount:
         create: true
         name: aws-load-balancer-controller
@@ -432,7 +432,7 @@ unit "secrets_manager" {
   path   = "secrets-manager"
 
   values = {
-    name        = "my-app-db-credentials"
+    name        = "{local.project}-{local.env}-db-credentials"
     description = "Database credentials for serverless application"
 
     db_username = "dbadmin"
@@ -455,7 +455,7 @@ unit "secrets_manager" {
     block_public_policy = true
 
     tags = {
-      Name        = "my-app-db-credentials"
+      Name        = "{local.project}-{local.env}-db-credentials"
       Environment = "development"
       Purpose     = "Database-Credentials"
     }
@@ -521,7 +521,7 @@ unit "rds" {
     vpc_path             = "../vpc"
     secrets_manager_path = "../secrets-manager"
 
-    identifier = "my-app-db"
+    identifier = "{local.project}-{local.env}-db"
 
     engine               = "mysql"
     engine_version       = "8.0.39"
@@ -569,7 +569,7 @@ unit "rds" {
     ]
 
     tags = {
-      Name        = "my-app-database"
+      Name        = "{local.project}-{local.env}-database"
       Environment = "development"
       Purpose     = "Application-Database"
     }
@@ -585,7 +585,7 @@ unit "lambda" {
     rds_path             = "../rds"
     secrets_manager_path = "../secrets-manager"
 
-    function_name = "my-serverless-app"
+    function_name = "{local.project}-app"
     description   = "Main serverless application function"
     handler       = "lambda_function.lambda_handler"
     runtime       = "python3.11"
@@ -597,12 +597,12 @@ unit "lambda" {
 
     # Option 2: S3 source code
     # s3_bucket = "my-lambda-deployments"
-    # s3_key    = "my-app/lambda.zip"
+    # s3_key    = "{local.project}-{local.env}/lambda.zip"
 
     environment_variables = {
       LOG_LEVEL          = "INFO"
       ENVIRONMENT        = "development"
-      APP_NAME           = "my-serverless-app"
+      APP_NAME           = "{local.project}-app"
       DB_CONNECTION_POOL = "10"
     }
 
@@ -615,7 +615,7 @@ unit "lambda" {
     tracing_config_mode = "Active"
 
     tags = {
-      Name        = "my-serverless-app"
+      Name        = "{local.project}-app"
       Environment = "development"
       Purpose     = "Main-Application-Function"
     }
@@ -629,8 +629,8 @@ unit "api_gateway" {
   values = {
     lambda_path = "../lambda"
 
-    name        = "my-serverless-api"
-    description = "HTTP API for my serverless application"
+    name        = "{local.project}-api"
+    description = "HTTP API for {local.project} application"
 
     cors_configuration = {
       allow_headers     = ["content-type", "x-amz-date", "authorization", "x-api-key", "x-amz-security-token"]
@@ -666,7 +666,7 @@ unit "api_gateway" {
     })
 
     tags = {
-      Name        = "my-serverless-api"
+      Name        = "{local.project}-api"
       Environment = "development"
       Purpose     = "Application-API"
     }
