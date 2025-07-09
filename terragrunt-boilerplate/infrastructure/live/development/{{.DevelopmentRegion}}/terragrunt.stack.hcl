@@ -349,7 +349,7 @@ unit "ebs_csi_driver" {
 }
 
 unit "aws_load_balancer_controller" {
-  source = "../../../../units/aws-load-balancer-controller"
+  source = "../../../../units/aws-lbc"
   path   = "aws-load-balancer-controller"
 
   values = {
