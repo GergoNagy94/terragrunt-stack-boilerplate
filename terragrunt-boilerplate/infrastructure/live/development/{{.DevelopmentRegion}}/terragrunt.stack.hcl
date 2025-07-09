@@ -1,5 +1,5 @@
-{ { if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") } }
-# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED PRESETS
+{ { if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") (eq.InfrastructurePreset "lambda") } }
+# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,LAMBDA PRESETS
 unit "vpc" {
   source = "../../../../units/vpc"
   path   = "vpc"
@@ -14,8 +14,9 @@ unit "vpc" {
     private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
     public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
+
     enable_nat_gateway     = true
-    single_nat_gateway     = true # Set to false for HA across AZs
+    single_nat_gateway     = true
     one_nat_gateway_per_az = false
 
     enable_dns_hostnames = true
@@ -32,7 +33,7 @@ unit "vpc" {
     }
   }
 }
-# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED PRESETS
+# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,LAMBDA PRESETS
 { { end } }
 { { if eq.InfrastructurePreset "web" } }
 # WEB PRESET
@@ -407,4 +408,253 @@ unit "additional_iam_roles" {
   }
 }
 # EKS AUTO MODE PRESET
+{ { end } }
+{ { if eq.InfrastructurePreset "serverless" } }
+# SERVERLESS PRESET
+unit "secrets_manager" {
+  source = "../../../../units/secrets-manager"
+  path   = "secrets-manager"
+
+  values = {
+    name        = "my-app-db-credentials"
+    description = "Database credentials for serverless application"
+
+    db_username = "dbadmin"
+    db_password = "MySecurePassword123!"
+
+    secret_string = jsonencode({
+      username = "dbadmin"
+      password = "MySecurePassword123!"
+      engine   = "mysql"
+      host     = "placeholder" # Will be updated after RDS creation
+      port     = 3306
+      dbname   = "appdb"
+    })
+
+    enable_rotation = false
+
+    recovery_window_in_days = 7
+    ignore_secret_changes   = true
+
+    block_public_policy = true
+
+    tags = {
+      Name        = "my-app-db-credentials"
+      Environment = "development"
+      Purpose     = "Database-Credentials"
+    }
+  }
+}
+
+unit "vpc" {
+  source = "../../../../units/vpc"
+  path   = "vpc"
+
+  values = {
+    name = "serverless-app-vpc"
+    cidr = "10.0.0.0/16"
+
+    azs = ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+    private_subnets  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+    public_subnets   = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+    database_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
+
+    create_database_subnet_group       = true
+    create_database_subnet_route_table = true
+
+    enable_nat_gateway     = true
+    single_nat_gateway     = true
+    one_nat_gateway_per_az = false
+
+    enable_dns_hostnames = true
+    enable_dns_support   = true
+
+    enable_s3_endpoint       = true
+    enable_dynamodb_endpoint = true
+
+    enable_flow_log                      = false
+    create_flow_log_cloudwatch_iam_role  = false
+    create_flow_log_cloudwatch_log_group = false
+
+    public_subnet_tags = {
+      Type = "Public"
+    }
+
+    private_subnet_tags = {
+      Type = "Private"
+    }
+
+    database_subnet_tags = {
+      Type = "Database"
+    }
+
+    tags = {
+      Name        = "serverless-app-vpc"
+      Environment = "development"
+      Purpose     = "Serverless-Application"
+    }
+  }
+}
+
+unit "rds" {
+  source = "../../../../units/rds-lambda"
+  path   = "rds"
+
+  values = {
+    vpc_path             = "../vpc"
+    secrets_manager_path = "../secrets-manager"
+
+    identifier = "my-app-db"
+
+    engine               = "mysql"
+    engine_version       = "8.0.39"
+    major_engine_version = "8.0"
+    family               = "mysql8.0"
+    instance_class       = "db.t3.micro" # INCREASE FOR PRODUCTION
+
+    allocated_storage     = 20
+    max_allocated_storage = 100
+    storage_type          = "gp3"
+    storage_encrypted     = true
+
+    db_name  = "appdb"
+    username = "dbadmin"
+
+    manage_master_user_password = true
+
+    create_db_parameter_group = true
+    create_db_option_group    = false
+
+    backup_retention_period = 7
+    backup_window           = "03:00-04:00"
+    maintenance_window      = "sun:04:00-sun:05:00"
+
+    monitoring_interval    = 60
+    create_monitoring_role = true
+
+    performance_insights_enabled          = true
+    performance_insights_retention_period = 7
+
+    multi_az = false # SET TO TRUE FOR PROD
+
+    deletion_protection = false # SET TO TRUE FOR PROD
+    skip_final_snapshot = true  # SET TO FALSE FOR PROD
+
+    parameters = [
+      {
+        name  = "innodb_buffer_pool_size"
+        value = "{DBInstanceClassMemory*3/4}"
+      },
+      {
+        name  = "max_connections"
+        value = "1000"
+      }
+    ]
+
+    tags = {
+      Name        = "my-app-database"
+      Environment = "development"
+      Purpose     = "Application-Database"
+    }
+  }
+}
+
+unit "lambda" {
+  source = "../../../../units/lambda"
+  path   = "lambda"
+
+  values = {
+    vpc_path             = "../vpc"
+    rds_path             = "../rds"
+    secrets_manager_path = "../secrets-manager"
+
+    function_name = "my-serverless-app"
+    description   = "Main serverless application function"
+    handler       = "lambda_function.lambda_handler"
+    runtime       = "python3.11"
+    timeout       = 30
+    memory_size   = 512
+
+    source_path    = "./src" # PATH TO LAMBDA SOURCE CODE
+    create_package = true
+
+    # Option 2: S3 source code
+    # s3_bucket = "my-lambda-deployments"
+    # s3_key    = "my-app/lambda.zip"
+
+    environment_variables = {
+      LOG_LEVEL          = "INFO"
+      ENVIRONMENT        = "development"
+      APP_NAME           = "my-serverless-app"
+      DB_CONNECTION_POOL = "10"
+    }
+
+    reserved_concurrent_executions = -1
+
+    layers = []
+
+    cloudwatch_logs_retention_in_days = 14
+
+    tracing_config_mode = "Active"
+
+    tags = {
+      Name        = "my-serverless-app"
+      Environment = "development"
+      Purpose     = "Main-Application-Function"
+    }
+  }
+}
+
+unit "api_gateway" {
+  source = "../../../../units/api-gateway"
+  path   = "api-gateway"
+
+  values = {
+    lambda_path = "../lambda"
+
+    name        = "my-serverless-api"
+    description = "HTTP API for my serverless application"
+
+    cors_configuration = {
+      allow_headers     = ["content-type", "x-amz-date", "authorization", "x-api-key", "x-amz-security-token"]
+      allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      allow_origins     = ["*"] # RESTRICT IN PRODUCTION
+      expose_headers    = ["date", "keep-alive"]
+      max_age           = 86400
+      allow_credentials = false
+    }
+
+    # Domain configuration
+    # domain_name                 = "api.yourdomain.com"
+    # domain_name_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
+    # create_api_domain_name      = true
+
+    default_route_settings = {
+      detailed_metrics_enabled = true
+      throttling_burst_limit   = 1000
+      throttling_rate_limit    = 500
+    }
+
+    access_log_format = jsonencode({
+      requestId        = "$context.requestId"
+      ip               = "$context.identity.sourceIp"
+      requestTime      = "$context.requestTime"
+      httpMethod       = "$context.httpMethod"
+      routeKey         = "$context.routeKey"
+      status           = "$context.status"
+      protocol         = "$context.protocol"
+      responseLength   = "$context.responseLength"
+      error            = "$context.error.message"
+      integrationError = "$context.integration.error"
+    })
+
+    tags = {
+      Name        = "my-serverless-api"
+      Environment = "development"
+      Purpose     = "Application-API"
+    }
+  }
+}
+# SERVERLESS PRESET
 { { end } }
