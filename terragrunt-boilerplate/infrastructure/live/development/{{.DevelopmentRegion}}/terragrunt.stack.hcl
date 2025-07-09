@@ -1,3 +1,12 @@
+locals {
+  project                   = "{{.ProjectName}}"
+  project_version           = "{{.ProjectVersion}}"
+  organization_id           = "{{.OrganizationId}}"
+  organization_root_id      = "{{.OrganizationRootId}}"
+  development_account_id    = "{{.DevelopmentAccountId}}"
+  development_account_email = "aws+development@{{.EmailDomain}}"
+}
+
 { { if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") (eq.InfrastructurePreset "serverless") } }
 # FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 unit "vpc" {
