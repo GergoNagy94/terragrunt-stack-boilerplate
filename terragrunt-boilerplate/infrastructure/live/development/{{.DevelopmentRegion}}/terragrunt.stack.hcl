@@ -1,3 +1,7 @@
+{{ if or (eq .InfrastructurePreset "web") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
+
+{{ end }}
+
 {{ if eq .InfrastructurePreset "web" }}
 unit "route53_zones" {
   source = "../../../../units/route53-zones"
