@@ -6,9 +6,8 @@ locals {
   development_account_id    = "{{.DevelopmentAccountId}}"
   development_account_email = "aws+development@{{.EmailDomain}}"
 }
-
-{{ if or (eq .InfrastructurePreset "fundamental") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") (eq .InfrastructurePreset "serverless") }}
-# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
+{{ if or (eq .InfrastructurePreset "foundation") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") (eq .InfrastructurePreset "serverless") }}
+# FOUNDATION, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 unit "vpc" {
   source = "../../../../units/vpc"
   path   = "vpc"
@@ -42,7 +41,7 @@ unit "vpc" {
     }
   }
 }
-# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
+# FOUNDATION, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 {{ end }}
 {{ if eq .InfrastructurePreset "web" }}
 # WEB PRESET
