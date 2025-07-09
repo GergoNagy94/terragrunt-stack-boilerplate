@@ -122,21 +122,39 @@ variables:
     type: string
     default: "0.82.3"
 
+skip_files:
+  - path: "infrastructure/live/development/db/**/*"
+    if: '{{ ne .InfrastructurePreset "serverless" }}'
+
+  - path: "infrastructure/live/development/src/**/*"
+    if: '{{ ne .InfrastructurePreset "serverless" }}'
+
 hooks:
   before:
     - command: "echo"
       args:
-        - "\n"
-        - "Welcome to Code Factory Terragrunt Stack Boilerplate! \n"
-        - "\n"
-        - "Starting Terragrunt Stack generation for {{.ProjectName}}... \n"
+        - |
+          ╭─────────────────────────────────────────────────────────────╮
+          │         Code Factory Terragrunt Stack Boilerplate           │
+          ╰─────────────────────────────────────────────────────────────╯
+          
+          Starting Terragrunt Stack generation for {{.ProjectName}}...
+          
 
   after:
+    - command: "bash"
+      args:
+        - "-c"
+        - "find . -type d -empty -delete 2>/dev/null || true; find . -type d -empty -delete 2>/dev/null || true; find . -type d -empty -delete 2>/dev/null || true"
+      dir: "{{ outputFolder }}"
+
     - command: "echo"
       args:
-        - "Terragrunt Stack generated successfully!"
-        - ""
-        - "Next steps:"
-        - "1. mise trust && mise install"
-        - "2. Configure AWS credentials"
-        - "3. Review and customize the configuration"
+        - |
+          ╭─────────────────────────────────────────────────────────────╮
+          │          Terragrunt Stack generated successfully!           │
+          ╰─────────────────────────────────────────────────────────────╯
+         
+           mise trust && mise install
+           Configure AWS credentials
+           Review and customize the configuration
