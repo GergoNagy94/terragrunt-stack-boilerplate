@@ -1,5 +1,5 @@
-{ { if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") (eq.InfrastructurePreset "lambda") } }
-# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,LAMBDA PRESETS
+{ { if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") (eq.InfrastructurePreset "serverless") } }
+# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 unit "vpc" {
   source = "../../../../units/vpc"
   path   = "vpc"
@@ -33,7 +33,7 @@ unit "vpc" {
     }
   }
 }
-# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,LAMBDA PRESETS
+# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 { { end } }
 { { if eq.InfrastructurePreset "web" } }
 # WEB PRESET
