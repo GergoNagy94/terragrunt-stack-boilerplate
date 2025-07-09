@@ -1,4 +1,5 @@
 { { if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") } }
+# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED PRESETS
 unit "vpc" {
   source = "../../../../units/vpc"
   path   = "vpc"
@@ -31,8 +32,10 @@ unit "vpc" {
     }
   }
 }
+# FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED PRESETS
 { { end } }
 { { if eq.InfrastructurePreset "web" } }
+# WEB PRESET
 unit "route53_zones" {
   source = "../../../../units/route53-zones"
   path   = "route53-zones"
@@ -240,8 +243,168 @@ unit "route53_records" {
     }
   }
 }
+# WEB PRESET
 { { end } }
 { { if eq.InfrastructurePreset "eks-auto" } }
+# EKS AUTO MODE PRESET
+unit "kms" {
+  source = "../../../../units/kms"
+  path   = "kms"
 
+  values = {
+    description = "KMS key for EKS cluster encryption"
+    aliases     = ["alias/eks-cluster-encryption"]
 
+    key_administrators = [
+      "arn:aws:iam::123456789012:root",
+      "arn:aws:iam::123456789012:role/terragrunt-execution-role"
+    ]
+
+    deletion_window_in_days = 7
+
+    tags = {
+      Name        = "eks-cluster-kms-key"
+      Environment = "development"
+      Purpose     = "EKS-Encryption"
+    }
+  }
+}
+
+unit "eks" {
+  source = "../../../../units/eks"
+  path   = "eks"
+
+  values = {
+    vpc_path = "../vpc"
+    kms_path = "../kms"
+
+    cluster_name    = "my-eks-auto-cluster"
+    cluster_version = "1.31"
+
+    enable_auto_mode              = true
+    bootstrap_self_managed_addons = true
+
+    cluster_endpoint_public_access       = true
+    cluster_endpoint_private_access      = true
+    cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"] # RESTRICT IN PRODUCTION
+
+    authentication_mode = "API_AND_CONFIG_MAP"
+
+    access_entries = {
+      admin = {
+        principal_arn     = "arn:aws:iam::123456789012:role/eks-admin-role" # BOILERPLATE ADMIN ROLE INPUT
+        kubernetes_groups = ["system:masters"]
+        policy_associations = {
+          admin = {
+            policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+            access_scope = {
+              type = "cluster"
+            }
+          }
+        }
+      }
+    }
+
+    enable_irsa = true
+
+    enable_kms_encryption = true
+
+    cluster_enabled_log_types              = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+    cloudwatch_log_group_retention_in_days = 14
+    create_cloudwatch_log_group            = true
+
+    node_pools = ["general-purpose", "system"]
+
+    cluster_security_group_additional_rules = {}
+    node_security_group_additional_rules    = {}
+
+    tags = {
+      Name        = "my-eks-auto-cluster"
+      Environment = "development"
+      ManagedBy   = "Terragrunt"
+      EKSMode     = "Auto"
+    }
+  }
+}
+
+unit "ebs_csi_driver" {
+  source = "../../../../units/ebs-csi-driver"
+  path   = "ebs-csi-driver"
+
+  values = {
+    eks_path = "../eks"
+    kms_path = "../kms"
+
+    role_name                  = "ebs-csi-driver-role"
+    namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
+
+    enable_kms_encryption = true
+
+    tags = {
+      Name        = "ebs-csi-driver-role"
+      Environment = "development"
+      Purpose     = "EBS-CSI-Driver"
+    }
+  }
+}
+
+unit "aws_load_balancer_controller" {
+  source = "../../../../units/aws-load-balancer-controller"
+  path   = "aws-load-balancer-controller"
+
+  values = {
+    eks_path = "../eks"
+
+    helm_chart_name         = "aws-load-balancer-controller"
+    helm_chart_release_name = "aws-load-balancer-controller"
+    helm_chart_repo         = "https://aws.github.io/eks-charts"
+    helm_chart_version      = "1.8.4"
+
+    namespace            = "kube-system"
+    service_account_name = "aws-load-balancer-controller"
+
+    irsa_role_name_prefix = "aws-load-balancer-controller"
+
+    helm_chart_values = [
+      <<-EOT
+      clusterName: my-eks-auto-cluster
+      serviceAccount:
+        create: true
+        name: aws-load-balancer-controller
+      region: us-east-1
+      vpcId: vpc-placeholder  # Will be populated by the module
+      EOT
+    ]
+
+    tags = {
+      Name        = "aws-load-balancer-controller"
+      Environment = "development"
+      Purpose     = "Load-Balancer-Controller"
+    }
+  }
+}
+
+unit "additional_iam_roles" {
+  source = "../../../../units/iam-roles"
+  path   = "additional-iam-roles"
+
+  values = {
+    eks_path = "../eks"
+
+    role_name = "external-dns-role"
+
+    namespace_service_accounts = ["kube-system:external-dns"]
+
+    attach_external_dns_policy = true
+
+    role_policy_arns = {}
+
+    tags = {
+      Name        = "external-dns-role"
+      Environment = "development"
+      Purpose     = "External-DNS"
+    }
+  }
+}
+# EKS AUTO MODE PRESET
 { { end } }
