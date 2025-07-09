@@ -7,7 +7,7 @@ locals {
   development_account_email = "aws+development@{{.EmailDomain}}"
 }
 
-{{ if or(eq.InfrastructurePreset "fundamental") (eq.InfrastructurePreset "eks-auto") (eq.InfrastructurePreset "eks-managed") (eq.InfrastructurePreset "serverless") }}
+{{ if or(eq .InfrastructurePreset "fundamental") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") (eq .InfrastructurePreset "serverless") }}
 # FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 unit "vpc" {
   source = "../../../../units/vpc"
@@ -44,7 +44,7 @@ unit "vpc" {
 }
 # FUNDAMENTAL, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
 {{ end }}
-{{ if eq.InfrastructurePreset "web" }}
+{{ if eq .InfrastructurePreset "web" }}
 # WEB PRESET
 unit "route53_zones" {
   source = "../../../../units/route53-zones"
@@ -255,7 +255,7 @@ unit "route53_records" {
 }
 # WEB PRESET
 {{ end }}
-{{ if eq.InfrastructurePreset "eks-auto" }}
+{{ if eq .InfrastructurePreset "eks-auto" }}
 # EKS AUTO MODE PRESET
 unit "kms" {
   source = "../../../../units/kms"
@@ -418,7 +418,7 @@ unit "additional_iam_roles" {
 }
 # EKS AUTO MODE PRESET
 {{ end }}
-{{ if eq.InfrastructurePreset "serverless" }}
+{{ if eq .InfrastructurePreset "serverless" }}
 # SERVERLESS PRESET
 unit "secrets_manager" {
   source = "../../../../units/secrets-manager"
