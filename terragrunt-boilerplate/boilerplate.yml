@@ -99,9 +99,10 @@ variables:
     description: |
       Choose your AWS infrastructure setup:
 
-      • foundation  - Basic AWS foundation (VPC, Security Groups, NAT Gateway)
-      • webapp      - Production web application (ALB, ASG, RDS, CloudFront, WAF)
-      • eks         - Production Kubernetes cluster (EKS, managed nodes, essential add-ons)
+      • foundation          - vpc
+      • web                 - s3, cloudfront, route53, webacl
+      • eks-automod         - vpc, eks-automod
+      • eks-managed         - vpc, eks-managed-nodegroup
     order: 15
     type: string
     default: "foundation"
