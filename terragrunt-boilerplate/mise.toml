@@ -10,3 +10,5 @@ trivy = "0.49.1"
 [env]
 PROJECT_NAME = "{{.ProjectName}}"
 PROJECT_VERSION = "{{.ProjectVersion}}"
+
+TERRAGRUNT_PARALLELISM = "5"
