@@ -385,7 +385,7 @@ unit "aws_load_balancer_controller" {
 }
 
 unit "additional_iam_roles" {
-  source = "../../../../units/iam-roles"
+  source = "../../../../units/iam-role"
   path   = "additional-iam-roles"
 
   values = {
