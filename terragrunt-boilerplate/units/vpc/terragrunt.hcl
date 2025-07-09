@@ -10,13 +10,13 @@ inputs = {
   name = values.name
   cidr = values.cidr
 
-  azs                                = values.azs
-  private_subnets                    = values.private_subnets
-  public_subnets                     = values.public_subnets
+  azs             = values.azs
+  private_subnets = values.private_subnets
+  public_subnets  = values.public_subnets
 
-  database_subnets                   = try(values.database_subnets, [])
-  create_database_subnet_group       = try(values.create_database_subnet_group, true)
-  create_database_subnet_route_table = try(values.create_database_subnet_route_table, true)
+  database_subnets                   = try(values.database_subnets, [])                     # try boilerplate
+  create_database_subnet_group       = try(values.create_database_subnet_group, true)       # try boilerplate
+  create_database_subnet_route_table = try(values.create_database_subnet_route_table, true) # try boilerplate
 
   enable_nat_gateway     = try(values.enable_nat_gateway, true)
   single_nat_gateway     = try(values.single_nat_gateway, true)
