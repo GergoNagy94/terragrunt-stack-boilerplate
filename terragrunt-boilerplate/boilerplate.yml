@@ -63,7 +63,7 @@ variables:
     description: "Domain for AWS account emails (e.g., example.com)"
     order: 9
     type: string
-    default: "example.com"
+    default: "codefactory.hu"
 
   - name: DevelopmentRegion
     description: "Development AWS Region"
