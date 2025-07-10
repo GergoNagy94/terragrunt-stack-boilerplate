@@ -116,15 +116,20 @@ variables:
   - name: InfrastructurePreset
     description: |
       Choose your AWS infrastructure setup:
-
-      • foundation          - vpc
-      • web                 - s3, cloudfront, route53, webacl
-      • serverless          - vpc, rds, lambda, secrets manager
-      • eks-auto            - vpc, eks-automod
-      • eks-managed         - vpc, eks-managed-nodegroup
+      • foundation   - vpc
+      • web          - s3, cloudfront, route53, webacl
+      • serverless   - vpc, rds, lambda, secrets manager
+      • eks-auto     - vpc, eks-automod
+      • eks-managed  - vpc, eks-managed-nodegroup
     order: 15
-    type: string
-    default: "foundation"
+    type: enum
+    options:
+      - foundation
+      - web
+      - serverless
+      - eks-auto
+      - eks-managed
+    default: single
     validate:
       - required
 
