@@ -33,56 +33,52 @@ unit "vpc" {
   path   = "vpc"
 
   values = {
-    name         = "{local.project}-{local.env}-vpc"
-    cidr         = "10.0.0.0/16"
-{{ if or (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
-    cluster_name = "{local.project}-{local.env}-cluster"
-{{ end }}
-{{ if (eq .InfrastructurePreset "serverless") }}    
-    database_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
-
-    enable_s3_endpoint       = true
-    enable_dynamodb_endpoint = true
-
-    public_subnet_tags = {
-      Type = "Public"
-    }
-
-    private_subnet_tags = {
-      Type = "Private"
-    }
-
-    database_subnet_tags = {
-      Type = "Database"
-    }
-
-    create_database_subnet_group       = true
-    create_database_subnet_route_table = true
-{{ end }}
-
+    name = "{local.project}-{local.env}-vpc"
+    cidr = "10.0.0.0/16"
+    
     azs = ["{local.region}a", "{local.region}b", "{local.region}c"]
-
     private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-    public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+    public_subnets = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
-
-    enable_nat_gateway     = true
-    single_nat_gateway     = true
+    enable_nat_gateway = true
+    single_nat_gateway = true
     one_nat_gateway_per_az = false
 
     enable_dns_hostnames = true
-    enable_dns_support   = true
+    enable_dns_support = true
 
-    enable_flow_log                      = false
-    create_flow_log_cloudwatch_iam_role  = false
+    enable_flow_log = false
+    create_flow_log_cloudwatch_iam_role = false
     create_flow_log_cloudwatch_log_group = false
 
-    tags = {
-      Name                                        = "{local.project}-{local.env}-vpc"
-      Environment                                 = "development"
 {{ if or (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
-      "kubernetes.io/cluster/{local.project}-cluster" = "owned"
+    cluster_name = "{local.project}-{local.env}-cluster"
 {{ end }}
+
+{{ if eq .InfrastructurePreset "serverless" }}
+    database_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
+    create_database_subnet_group = true
+    create_database_subnet_route_table = true
+    
+    enable_s3_endpoint = true
+    enable_dynamodb_endpoint = true
+    
+    public_subnet_tags = {
+      Type = "Public"
+    }
+    private_subnet_tags = {
+      Type = "Private"
+    }
+    database_subnet_tags = {
+      Type = "Database"
+    }
+{{ end }}
+
+    tags = {
+      Name = "{local.project}-{local.env}-vpc"
+      Environment = "development"
+      Project = "{local.project}"
+      ManagedBy = "Terragrunt"
     }
   }
 }
