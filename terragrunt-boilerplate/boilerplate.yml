@@ -2,9 +2,8 @@ variables:
   - name: AccountType
     description: |
       Choose your AWS account setup:
-
-      • single              - Single AWS account for all environments
-      • multi               - Separate AWS accounts per environment (development, management, monitoring, production)
+      • single    - Single AWS account for all environments
+      • multi     - Separate AWS accounts per environment (development, management, monitoring, production)
     order: 0
     type: enum
     options:
