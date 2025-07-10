@@ -14,9 +14,9 @@ inputs = {
   private_subnets = values.private_subnets
   public_subnets  = values.public_subnets
 
-  database_subnets                   = try(values.database_subnets, [])                     # try boilerplate
-  create_database_subnet_group       = try(values.create_database_subnet_group, true)       # try boilerplate
-  create_database_subnet_route_table = try(values.create_database_subnet_route_table, true) # try boilerplate
+  database_subnets                   = try(values.database_subnets, [])
+  create_database_subnet_group       = try(values.create_database_subnet_group, false)
+  create_database_subnet_route_table = try(values.create_database_subnet_route_table, false)
 
   enable_nat_gateway     = try(values.enable_nat_gateway, true)
   single_nat_gateway     = try(values.single_nat_gateway, true)
@@ -34,18 +34,18 @@ inputs = {
 
   public_subnet_tags = merge(
     try(values.public_subnet_tags, {}),
-    {
-      "kubernetes.io/role/elb"                       = "1"
+    try(values.cluster_name, null) != null ? {
+      "kubernetes.io/role/elb" = "1"
       "kubernetes.io/cluster/${values.cluster_name}" = "owned"
-    }
+    } : {}
   )
 
   private_subnet_tags = merge(
     try(values.private_subnet_tags, {}),
-    {
-      "kubernetes.io/role/internal-elb"              = "1"
+    try(values.cluster_name, null) != null ? {
+      "kubernetes.io/role/internal-elb" = "1"
       "kubernetes.io/cluster/${values.cluster_name}" = "owned"
-    }
+    } : {}
   )
 
   database_subnet_tags = try(values.database_subnet_tags, {
