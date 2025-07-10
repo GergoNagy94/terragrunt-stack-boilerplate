@@ -3,19 +3,32 @@ locals {
   region                    = "{{.DevelopmentRegion}}"
   project                   = "{{.ProjectName}}"
   project_version           = "{{.ProjectVersion}}"
-  organization_id           = "{{.OrganizationId}}"
-  organization_root_id      = "{{.OrganizationRootId}}"
+  account_type    = "{{.AccountType}}"
+  {{- if eq .AccountType "single" }}
   development_account_id    = "{{.DevelopmentAccountId}}"
   development_account_email = "aws+development@{{.EmailDomain}}"
+  {{- else }}
+  organization_id           = "{{.OrganizationId}}"
+  organization_root_id      = "{{.OrganizationRootId}}"
 
+  management_account_id     = "{{.ManagementAccountId}}"
+  monitoring_account_id     = "{{.MonitoringAccountId}}"
+  production_account_id     = "{{.ProductionAccountId}}"
+  development_account_id    = "{{.DevelopmentAccountId}}"
+
+  management_account_email  = "aws+management@{{.EmailDomain}}"
+  monitoring_account_email  = "aws+monitoring@{{.EmailDomain}}"
+  production_account_email  = "aws+production@{{.EmailDomain}}"
+  development_account_email = "aws+development@{{.EmailDomain}}"
+  {{- end }}
   tags = {
     Project     = local.project
     Environment = local.env
     Maintaner   = "Terragrunt"
   }
 }
-{{ if or (eq .InfrastructurePreset "foundation") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") (eq .InfrastructurePreset "serverless") }}
-# FOUNDATION, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
+{{ if or (eq .InfrastructurePreset "foundation") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
+# FOUNDATION, EKS AUTO MODE, EKS MANAGED
 unit "vpc" {
   source = "../../../../units/vpc"
   path   = "vpc"
@@ -45,11 +58,13 @@ unit "vpc" {
     tags = {
       Name                                        = "{local.project}-{local.env}-vpc"
       Environment                                 = "development"
-      "kubernetes.io/cluster/{local.project}-auto-cluster" = "owned"
+{{ if or (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
+      "kubernetes.io/cluster/{local.project}-cluster" = "owned"
+{{ end }}
     }
   }
 }
-# FOUNDATION, EKS AUTO MODE, EKS MANAGED ,SERVERLESS PRESETS
+# FOUNDATION, EKS AUTO MODE, EKS MANAGED
 {{ end }}
 {{ if eq .InfrastructurePreset "web" }}
 # WEB PRESET
