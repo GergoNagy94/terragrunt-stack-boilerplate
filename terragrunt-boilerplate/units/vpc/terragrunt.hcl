@@ -25,8 +25,8 @@ inputs = {
   enable_dns_hostnames = try(values.enable_dns_hostnames, true)
   enable_dns_support   = try(values.enable_dns_support, true)
 
-  enable_s3_endpoint       = try(values.enable_s3_endpoint, true)
-  enable_dynamodb_endpoint = try(values.enable_dynamodb_endpoint, true)
+  enable_s3_endpoint       = try(values.enable_s3_endpoint, false)
+  enable_dynamodb_endpoint = try(values.enable_dynamodb_endpoint, false)
 
   enable_flow_log                      = try(values.enable_flow_log, false)
   create_flow_log_cloudwatch_iam_role  = try(values.create_flow_log_cloudwatch_iam_role, false)
