@@ -28,7 +28,6 @@ locals {
   }
 }
 {{ if or (eq .InfrastructurePreset "foundation") (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
-# FOUNDATION, EKS AUTO MODE, EKS MANAGED
 unit "vpc" {
   source = "../../../../units/vpc"
   path   = "vpc"
@@ -64,10 +63,8 @@ unit "vpc" {
     }
   }
 }
-# FOUNDATION, EKS AUTO MODE, EKS MANAGED
 {{ end }}
 {{ if eq .InfrastructurePreset "web" }}
-# WEB PRESET
 unit "route53_zones" {
   source = "../../../../units/route53-zones"
   path   = "route53-zones"
@@ -275,10 +272,8 @@ unit "route53_records" {
     }
   }
 }
-# WEB PRESET
 {{ end }}
 {{ if eq .InfrastructurePreset "eks-auto" }}
-# EKS AUTO MODE PRESET
 unit "kms" {
   source = "../../../../units/kms"
   path   = "kms"
@@ -438,10 +433,8 @@ unit "additional_iam_roles" {
     }
   }
 }
-# EKS AUTO MODE PRESET
 {{ end }}
 {{ if eq .InfrastructurePreset "serverless" }}
-# SERVERLESS PRESET
 unit "secrets_manager" {
   source = "../../../../units/secrets-manager"
   path   = "secrets-manager"
@@ -687,5 +680,4 @@ unit "api_gateway" {
     }
   }
 }
-# SERVERLESS PRESET
 {{ end }}
