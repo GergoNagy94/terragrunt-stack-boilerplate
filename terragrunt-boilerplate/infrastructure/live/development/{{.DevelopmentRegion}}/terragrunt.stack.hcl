@@ -3,7 +3,7 @@ locals {
   region                    = "{{.DevelopmentRegion}}"
   project                   = "{{.ProjectName}}"
   project_version           = "{{.ProjectVersion}}"
-  account_type    = "{{.AccountType}}"
+  account_type              = "{{.AccountType}}"
   {{- if eq .AccountType "single" }}
   development_account_id    = "{{.DevelopmentAccountId}}"
   development_account_email = "aws+development@{{.EmailDomain}}"
@@ -54,7 +54,6 @@ unit "vpc" {
 {{ if or (eq .InfrastructurePreset "eks-auto") (eq .InfrastructurePreset "eks-managed") }}
     cluster_name = "{local.project}-{local.env}-cluster"
 {{ end }}
-
 {{ if eq .InfrastructurePreset "serverless" }}
     database_subnets = ["10.0.201.0/24", "10.0.202.0/24", "10.0.203.0/24"]
     create_database_subnet_group = true
@@ -73,7 +72,6 @@ unit "vpc" {
       Type = "Database"
     }
 {{ end }}
-
     tags = {
       Name = "{local.project}-{local.env}-vpc"
       Environment = "development"
