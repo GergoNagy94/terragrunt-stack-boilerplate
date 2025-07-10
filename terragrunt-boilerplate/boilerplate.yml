@@ -2,8 +2,8 @@ variables:
   - name: AccountType
     description: |
       Choose your AWS account setup:
-      • single    - Single AWS account for all environments
-      • multi     - Separate AWS accounts per environment (development, management, monitoring, production)
+      • single    (Single AWS account for all environments)
+      • multi     (Separate AWS accounts per environment (development, management, monitoring, production))
     order: 0
     type: enum
     options:
@@ -30,13 +30,13 @@ variables:
     default: "v1.0.0"
 
   - name: OrganizationId
-    description: "AWS Organization ID (only needed for multi-account setup)"
+    description: "AWS Organization ID (multi-account only, press ENTER to skip for single-account)"
     order: 3
     type: string
     default: "o-00000000000"
 
   - name: OrganizationRootId
-    description: "AWS Organization Root ID (only needed for multi-account setup)"
+    description: "AWS Organization Root ID (multi-account only, press ENTER to skip for single-account)"
     order: 4
     type: string
     default: "r-0000"
@@ -50,31 +50,22 @@ variables:
       - length-12
 
   - name: ManagementAccountId
-    description: "Management Account ID (multi-account setup only)"
+    description: "Management Account ID (for single-account: just press ENTER)"
     order: 6
     type: string
-    default: "{{ .DevelopmentAccountId }}"
-    validate:
-      - required
-      - length-12
+    reference: DevelopmentAccountId
 
   - name: MonitoringAccountId
-    description: "Monitoring Account ID (multi-account setup only)"
+    description: "Monitoring Account ID (for single-account: just press ENTER)"
     order: 7
     type: string
-    default: "{{ .DevelopmentAccountId }}"
-    validate:
-      - required
-      - length-12
+    reference: DevelopmentAccountId
 
   - name: ProductionAccountId
-    description: "Production Account ID (multi-account setup only)"
+    description: "Production Account ID (for single-account: just press ENTER)"
     order: 8
     type: string
-    default: "{{ .DevelopmentAccountId }}"
-    validate:
-      - required
-      - length-12
+    reference: DevelopmentAccountId
 
   - name: EmailDomain
     description: "Domain for AWS account emails (e.g., example.com)"
@@ -89,22 +80,22 @@ variables:
     default: "eu-west-1"
 
   - name: ManagementRegion
-    description: "Management AWS Region (multi-account setup only)"
+    description: "Management AWS Region (for single-account: just press ENTER)"
     order: 11
     type: string
-    default: "{{ .DevelopmentRegion }}"
+    reference: DevelopmentRegion
 
   - name: MonitoringRegion
-    description: "Monitoring AWS Region (multi-account setup only)"
+    description: "Monitoring AWS Region (for single-account: just press ENTER)"
     order: 12
     type: string
-    default: "{{ .DevelopmentRegion }}"
+    reference: DevelopmentRegion
 
   - name: ProductionRegion
-    description: "Production AWS Region (multi-account setup only)"
+    description: "Production AWS Region (for single-account: just press ENTER)"
     order: 13
     type: string
-    default: "{{ .DevelopmentRegion }}"
+    reference: DevelopmentRegion
 
   - name: StateRegion
     description: "Region for Terraform state bucket"
@@ -115,11 +106,11 @@ variables:
   - name: InfrastructurePreset
     description: |
       Choose your AWS infrastructure setup:
-      • foundation   - vpc
-      • web          - s3, cloudfront, route53, webacl
-      • serverless   - vpc, rds, lambda, secrets manager
-      • eks-auto     - vpc, eks-automod
-      • eks-managed  - vpc, eks-managed-nodegroup
+      • foundation     (vpc)
+      • web            (s3, cloudfront, route53, webacl)
+      • serverless     (vpc, rds, lambda, secrets manager)
+      • eks-auto       (vpc, eks-automod)
+      • eks-managed    (vpc, eks-managed-nodegroup)
     order: 15
     type: enum
     options:
@@ -128,7 +119,7 @@ variables:
       - serverless
       - eks-auto
       - eks-managed
-    default: single
+    default: foundation
     validate:
       - required
 
@@ -154,6 +145,7 @@ skip_files:
   - path: "infrastructure/live/production/**/*"
     if: '{{ eq .AccountType "single" }}'
 
+
   - path: "infrastructure/live/development/db/**/*"
     if: '{{ ne .InfrastructurePreset "serverless" }}'
 
@@ -168,11 +160,10 @@ hooks:
           ╭─────────────────────────────────────────────────────────────╮
           │         Code Factory Terragrunt Stack Boilerplate           │
           ╰─────────────────────────────────────────────────────────────╯
-          
+
           Starting Terragrunt Stack generation for {{.ProjectName}}...
           Account Type: {{.AccountType}}
           Infrastructure Preset: {{.InfrastructurePreset}}
-          
 
   after:
     - command: "bash"
@@ -187,7 +178,7 @@ hooks:
           ╭─────────────────────────────────────────────────────────────╮
           │          Terragrunt Stack generated successfully!           │
           ╰─────────────────────────────────────────────────────────────╯
-         
+
            mise trust && mise install
            Configure AWS credentials{{ if eq .AccountType "single" }} for development account{{ else }} for all accounts{{ end }}
            Review and customize the configuration
