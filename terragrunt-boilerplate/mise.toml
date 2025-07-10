@@ -1,6 +1,6 @@
 [tools]
-opentofu = {{.OpentofuVersion}}
-terragrunt = {{.TerragruntVersion}}
+opentofu = "{{.OpentofuVersion}}"
+terragrunt = "{{.TerragruntVersion}}"
 
 pre-commit = "3.6.0"
 tflint = "0.50.3"
