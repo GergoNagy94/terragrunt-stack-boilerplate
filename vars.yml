@@ -17,7 +17,7 @@ MonitoringRegion: us-east-1
 ProductionRegion: eu-central-1
 StateRegion: eu-central-1
 
-InfrastructurePreset: foundation # foundation, web, serverless, eks-auto, eks-managed
+InfrastructurePreset: serverless # foundation, web, serverless, eks-auto, eks-managed
 
 OpentofuVersion: "1.10.2"
 TerragruntVersion: "0.82.3"

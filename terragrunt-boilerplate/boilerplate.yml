@@ -145,7 +145,6 @@ skip_files:
   - path: "infrastructure/live/production/**/*"
     if: '{{ eq .AccountType "single" }}'
 
-
   - path: "infrastructure/live/development/db/**/*"
     if: '{{ ne .InfrastructurePreset "serverless" }}'
 
@@ -155,30 +154,28 @@ skip_files:
 hooks:
   before:
     - command: "echo"
-      args:
-        - |
-          ╭─────────────────────────────────────────────────────────────╮
-          │         Code Factory Terragrunt Stack Boilerplate           │
-          ╰─────────────────────────────────────────────────────────────╯
-
-          Starting Terragrunt Stack generation for {{.ProjectName}}...
-          Account Type: {{.AccountType}}
-          Infrastructure Preset: {{.InfrastructurePreset}}
+      args: 
+        - "╭─────────────────────────────────────────────────────────────╮ \n"
+        - "│         Code Factory Terragrunt Stack Boilerplate           │ \n"
+        - "╰─────────────────────────────────────────────────────────────╯ \n"
+        - " \n"
+        - "Starting Terragrunt Stack generation for {{.ProjectName}}... \n"
+        - "Account Type: {{.AccountType}} \n"
+        - "Infrastructure Preset: {{.InfrastructurePreset}} \n"
 
   after:
     - command: "bash"
       args:
         - "-c"
-        - "find . -type d -empty -delete 2>/dev/null || true; find . -type d -empty -delete 2>/dev/null || true; find . -type d -empty -delete 2>/dev/null || true"
+        - "find . -type d -empty -delete 2>/dev/null || true"
       dir: "{{ outputFolder }}"
 
-    - command: "echo"
-      args:
-        - |
-          ╭─────────────────────────────────────────────────────────────╮
-          │          Terragrunt Stack generated successfully!           │
-          ╰─────────────────────────────────────────────────────────────╯
-
-           mise trust && mise install
-           Configure AWS credentials{{ if eq .AccountType "single" }} for development account{{ else }} for all accounts{{ end }}
-           Review and customize the configuration
+    - command: "echo -e"
+      args: 
+        - "╭─────────────────────────────────────────────────────────────╮ \n"
+        - "│          Terragrunt Stack generated successfully!           │ \n"
+        - "╰─────────────────────────────────────────────────────────────╯ \n"
+        - " \n"
+        - "mise trust && mise install \n"
+        - "Configure AWS credentials \n"
+        - "Review and customize the configuration \n"

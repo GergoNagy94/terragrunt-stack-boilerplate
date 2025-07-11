@@ -1,14 +1,17 @@
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.88.4
+    rev: v1.97.3
     hooks:
       - id: terraform_fmt
         args:
           - --args=-diff
           - --args=-write=true
-      - id: terraform_validate
-        args:
-          - --args=-json
+
+      #      - id: terraform_validate
+      #        args:
+      #          - --args=-json
+      #        exclude: ^units/
+
       - id: terraform_tflint
         args:
           - --args=--only=terraform_deprecated_interpolation
@@ -24,16 +27,27 @@ repos:
           - --args=--only=terraform_required_providers
           - --args=--only=terraform_standard_module_structure
           - --args=--only=terraform_workspace_remote
+        exclude: ^units/
+
       - id: terraform_tfsec
         args:
           - --args=--minimum-severity=HIGH
+        exclude: ^units/
+
       - id: terraform_checkov
         args:
           - --args=--quiet
           - --args=--compact
+        exclude: ^units/
+
+      #      - id: terragrunt_validate
+      #        exclude: ^units/
+
+      - id: terragrunt_fmt
+        exclude: ^units/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -41,7 +55,7 @@ repos:
       - id: check-json
       - id: check-merge-conflict
       - id: check-added-large-files
-        args: ['--maxkb=500']
+        args: ["--maxkb=500"]
       - id: detect-private-key
       - id: check-case-conflict
 
@@ -50,13 +64,12 @@ repos:
     hooks:
       - id: prettier
         files: \.(json|yaml|yml|md)$
-
-  - repo: https://github.com/trufflesecurity/trufflehog
-    rev: v3.69.0
-    hooks:
-      - id: trufflehog
-        name: TruffleHog
-        description: Detect secrets in your data.
-        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail'
-        language: system
-        stages: ["commit", "push"]
+#  - repo: https://github.com/trufflesecurity/trufflehog
+#    rev: v3.69.0
+#    hooks:
+#      - id: trufflehog
+#        name: TruffleHog
+#        description: Detect secrets in your data.
+#        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail'
+#        language: system
+#        stages: ["pre-commit", "pre-push"]

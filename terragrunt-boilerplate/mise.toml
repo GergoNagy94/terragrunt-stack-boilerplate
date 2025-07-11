@@ -4,6 +4,7 @@ terragrunt = "{{.TerragruntVersion}}"
 
 pre-commit = "4.2.0"
 tflint = "0.58.0"
+tfsec = "1.28.14"
 trivy = "0.64.1"
 checkov = "3.2.447"
 
@@ -11,4 +12,4 @@ checkov = "3.2.447"
 PROJECT_NAME = "{{.ProjectName}}"
 PROJECT_VERSION = "{{.ProjectVersion}}"
 
-TERRAGRUNT_PARALLELISM = "5"
+TG_PARALLELISM = "5"
